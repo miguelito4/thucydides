@@ -1,0 +1,204 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="About" description="Learn about the Thucydides Daily Reader project">
+  <article class="about-page">
+    <h1>About This Project</h1>
+    
+    <section>
+      <h2>What Is This?</h2>
+      <p>
+        The Thucydides Daily Reader is a 507-day journey through one of history's most important texts: 
+        Thucydides' <em>History of the Peloponnesian War</em>. <br><br>
+        Written in the 5th century BCE, this work chronicles the conflict between Athens and Sparta that reshaped the ancient Greek world.
+      </p>
+      <p>
+        Rather than presenting the complete text at once, this project releases one passage per day, 
+        beginning November 27, 2025. <br><br>
+        Each passage is enriched with modern translation, historical context, scholarly annotations, and connections to other ancient sources.<br><br>
+        Taking "Thucydides on War" at the <a href="https://en.wikipedia.org/wiki/SAIS_Europe" class="external" target="_blank" rel="noopener">SAIS Bologna Center</a> was one of the richest intellectual experiences I've had the fortune to savor. I want to share my passion for this book with the world at large, and encourage more people to engage with Thucydides.
+      </p>
+    </section>
+
+    <section>
+      <h2>Why Thucydides?</h2>
+      <p>
+        Thucydides is often called the first "scientific" historian. Unlike his predecessors, he:
+      </p>
+      <ul>
+        <li>Rejected mythological explanations in favor of rational analysis</li>
+        <li>Investigated underlying causes rather than accepting surface narratives</li>
+        <li>Sought eyewitness testimony and tested evidence</li>
+        <li>Examined human nature and power dynamics with an attuned appreciation for psychology</li>
+      </ul>
+      <p>
+        His work remains relevant today, and will in perpetuity.<br><br> 
+        The Peloponnesian War offers lessons about imperial overreach, democratic fragility, leadership failures, and the human costs of conflict that resonate across millennia.
+      </p>
+    </section>
+
+    <section>
+      <h2>What's Included Each Day?</h2>
+      <p>Every daily passage features:</p>
+      <ul>
+        <li>
+          <strong>Side-by-side translations:</strong> The original 1910 Crawley translation alongside 
+          a modern rendering (via Claude) that makes Thucydides accessible to contemporary readers
+        </li>
+        <li>
+          <strong>Historical context:</strong> Explanation of what's happening in the narrative, 
+          why it matters, and how it fits into the broader arc of the war
+        </li>
+        <li>
+          <strong>Scholarly annotations:</strong> Links to academic resources, archaeological evidence, 
+          and detailed explanations of key terms and concepts
+        </li>
+        <li>
+          <strong>Parallel ancient sources:</strong> Related passages from Herodotus, Plutarch, Xenophon, 
+          and other ancient historians who covered the same events or themes
+        </li>
+        <li>
+          <strong>Thematic connections:</strong> Links to other passages exploring similar themes like 
+          power, rhetoric, justice, or naval warfare
+        </li>
+        <li>
+          <strong>Discussion prompts:</strong> Thoughtful questions to deepen understanding and 
+          encourage reflection on contemporary parallels
+        </li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>How It Was Made</h2>
+      <p>
+        This project uses AI (Claude by Anthropic) to enrich the public domain Crawley translation 
+        with modern scholarly insights. The enrichment process involved:
+      </p>
+      <ul>
+        <li>Parsing the complete text into 507 manageable daily passages</li>
+        <li>Generating sophisticated modern translations that preserve Thucydides' style</li>
+        <li>Adding historical context drawn from contemporary scholarship</li>
+        <li>Identifying connections to other ancient sources</li>
+        <li>Creating thematic links across the entire work</li>
+      </ul>
+      <p>
+        All code and enriched content is <a href="https://github.com/miguelito4/thucydides" 
+        class="external" target="_blank" rel="noopener">open source on GitHub</a> under the MIT license.
+      </p>
+    </section>
+
+    <section>
+      <h2>Why Read It Daily?</h2>
+      <p>
+        The daily format serves several purposes:
+      </p>
+      <ul>
+        <li>
+          <strong>Digestibility:</strong> Breaking the History into 507 passages makes this 
+          challenging text manageable, even for busy readers
+        </li>
+        <li>
+          <strong>Contemplation:</strong> Time between passages allows for reflection on themes 
+          and parallels to contemporary events
+        </li>
+        <li>
+          <strong>Community:</strong> A shared reading schedule creates a community of readers 
+          moving through the text together
+        </li>
+        <li>
+          <strong>Cumulative understanding:</strong> Daily engagement builds familiarity with 
+          Thucydides' cast of characters and the complex web of alliances and conflicts
+        </li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Further Reading</h2>
+      <p>
+        For those interested in learning more about Thucydides and the Peloponnesian War:
+      </p>
+      <ul>
+        <li>
+          <a href="https://www.perseus.tufts.edu/hopper/text?doc=Perseus:text:1999.01.0200" 
+          class="external" target="_blank" rel="noopener">
+            Complete Crawley translation at Perseus Digital Library
+          </a>
+        </li>
+        <li>
+        <a href="https://books.google.com/books?id=1byKQSdfYMwC&newbks" class="external" target="_blank" rel="noopener">Rex Warner translation (Penguin)</a>
+        </li>
+        <li>
+          <a href="https://en.wikipedia.org/wiki/History_of_the_Peloponnesian_War" 
+          class="external" target="_blank" rel="noopener">
+            Overview of the History on Wikipedia
+          </a>
+        </li>
+        <li>
+          <a href="https://bookshop.org/p/books/historical-commentary-on-thucydides-a-companion-to-rex-warner-s-penguin-translation-david-cartwright/872245afe10ad345?ean=9780472084197&next=t" class="external" target="_blank" rel="noopener">
+          A Historical Commentary on Thucydides by David Cartwright
+          </a>
+        <li>
+          Raymond Aron, "Thucydides and the Historical Narrative"
+        </li>
+        <li>
+          <a href="https://global.oup.com/academic/product/anangk-in-thucydides-9781555402808?cc=us&lang=en&" class="external" target="_blank" rel="noopener">
+          Martin Ostwald, <em>Anangkê</em> in Thucydides
+          </a>
+        </li>
+        <li>
+          <a href="https://bookshop.org/p/books/the-peloponnesian-war-donald-kagan/538ce21e410ffaa7?ean=9780142004371&next=t" class="external" target="_blank" rel="noopener">
+          Donald Kagan, The Peloponnesian War
+          </a>
+        </li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>About the Creator</h2>
+      <p>
+        Mike Casey is Managing Partner at Portico Advisers, where he works with technology investors tackling planetary challenges. 
+        You can find more of his work at <a href="https://caseyjr.org" class="external">caseyjr.org</a> and 
+        <a href="https://bits.caseyjr.org" class="external">bits.caseyjr.org</a>.
+      </p>
+    </section>
+  </article>
+</BaseLayout>
+
+<style>
+  .about-page {
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  
+  .about-page h1 {
+    font-size: 3rem;
+    margin-bottom: 2rem;
+  }
+  
+  .about-page section {
+    margin: 3rem 0;
+  }
+  
+  .about-page h2 {
+    font-size: 2rem;
+    margin-bottom: 1.25rem;
+  }
+  
+  .about-page p {
+    margin-bottom: 1.25rem;
+  }
+  
+  .about-page ul {
+    margin: 1.5rem 0;
+    padding-left: 2rem;
+  }
+  
+  .about-page li {
+    margin-bottom: 1rem;
+  }
+  
+  .about-page strong {
+    font-weight: 600;
+  }
+</style>

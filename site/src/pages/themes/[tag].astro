@@ -1,0 +1,146 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getAllThemes, getChunksByTheme } from '../../utils/chunks.js';
+
+export async function getStaticPaths() {
+  const themes = getAllThemes();
+  
+  return themes.map(theme => ({
+    params: { tag: theme },
+    props: { theme }
+  }));
+}
+
+const { theme } = Astro.props;
+const chunks = getChunksByTheme(theme);
+---
+
+<BaseLayout 
+  title={`Theme: ${theme}`}
+  description={`All passages exploring ${theme} in Thucydides' History`}
+>
+  <article class="theme-page">
+    <header>
+      <a href="/themes" class="internal back-link">← All Themes</a>
+      <h1>{theme}</h1>
+      <p class="passage-count">{chunks.length} passage{chunks.length !== 1 ? 's' : ''}</p>
+    </header>
+
+    <div class="passage-list">
+      {chunks.map(chunk => {
+        const dayNumber = chunk.chunk_index + 1;
+        return (
+          <a href={`/day/${dayNumber}`} class="internal passage-card">
+            <div class="passage-meta">
+              <span class="day-number">Day {dayNumber}</span>
+              <span class="book-chapter">Book {chunk.book}, Chapter {chunk.chapter}</span>
+            </div>
+            <p class="passage-preview">
+              {chunk.enriched.modern_translation?.substring(0, 200)}...
+            </p>
+            <span class="read-link">Read full passage →</span>
+          </a>
+        );
+      })}
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  .theme-page {
+    max-width: 900px;
+    margin: 0 auto;
+  }
+  
+  .theme-page header {
+    margin-bottom: 3rem;
+  }
+  
+  .back-link {
+    font-family: var(--font-sans);
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    display: inline-block;
+    margin-bottom: 1rem;
+  }
+  
+  .theme-page h1 {
+    font-size: 3rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .passage-count {
+    font-family: var(--font-sans);
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+  }
+  
+  .passage-list {
+    display: grid;
+    gap: 1.5rem;
+  }
+  
+  .passage-card {
+    background: white;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 1.5rem;
+    display: block;
+    transition: all 0.2s ease;
+  }
+  
+  .passage-card:hover {
+    border-color: var(--accent-blue);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  }
+  
+  .passage-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    font-family: var(--font-sans);
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  
+  .day-number {
+    color: var(--accent-blue);
+    font-weight: 600;
+  }
+  
+  .book-chapter {
+    color: var(--text-muted);
+  }
+  
+  .passage-preview {
+    font-size: 1rem;
+    line-height: 1.7;
+    margin-bottom: 1rem;
+    color: var(--text-primary);
+  }
+  
+  .read-link {
+    font-family: var(--font-sans);
+    font-size: 0.9rem;
+    color: var(--accent-blue);
+    font-weight: 500;
+  }
+  
+  @media (max-width: 768px) {
+    .theme-page h1 {
+      font-size: 2rem;
+    }
+    
+    .passage-meta {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.25rem;
+    }
+  }
+</style>

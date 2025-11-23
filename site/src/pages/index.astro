@@ -1,0 +1,230 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getReleasedDayCount, formatDate, getReleaseDate, getProgressPercentage } from '../utils/releaseDate.js';
+import { getReleasedChunks } from '../utils/chunks.js';
+
+const releasedDayCount = getReleasedDayCount();
+const releasedChunks = getReleasedChunks();
+const totalDays = 506;
+
+// Get the latest released chunk
+const latestChunk = releasedChunks[releasedChunks.length - 1];
+const latestDayNumber = latestChunk ? latestChunk.chunk_index + 1 : 0;
+
+const nextDayNumber = latestDayNumber + 1;
+const nextReleaseDate = getReleaseDate(nextDayNumber);
+---
+
+<BaseLayout title="Home">
+  <div class="hero">
+    <h1>A Daily Journey Through<br>The Peloponnesian War</h1>
+    <p class="subtitle">
+      507 days of Thucydides' <em>History</em>, enriched with modern translation,<br>
+      historical context, and scholarly annotations
+    </p>
+  </div>
+
+  <div class="progress-section">
+    <div class="progress-stats">
+      <div class="stat">
+        <span class="stat-number">{latestDayNumber}</span>
+        <span class="stat-label">Days Published</span>
+      </div>
+      <div class="stat">
+        <span class="stat-number">{totalDays - latestDayNumber}</span>
+        <span class="stat-label">Days Remaining</span>
+      </div>
+      <div class="stat">
+        <span class="stat-number">{getProgressPercentage(latestDayNumber)}%</span>
+        <span class="stat-label">Complete</span>
+      </div>
+    </div>
+    
+    <div class="progress-bar">
+      <div class="progress-fill" style={`width: ${getProgressPercentage(latestDayNumber)}%`}></div>
+    </div>
+  </div>
+
+  {latestChunk && (
+    <div class="latest-passage">
+      <h2>Latest Passage</h2>
+      <a href={`/day/${latestDayNumber}`} class="internal passage-link">
+        <div class="passage-card">
+          <div class="passage-meta">
+            <span class="day-number">Day {latestDayNumber}</span>
+            <span class="book-chapter">Book {latestChunk.book}, Chapter {latestChunk.chapter}</span>
+          </div>
+          <p class="passage-preview">
+            {latestChunk.enriched.modern_translation?.substring(0, 250)}...
+          </p>
+          <span class="read-more">Read full passage →</span>
+        </div>
+      </a>
+    </div>
+  )}
+
+  {nextDayNumber <= totalDays && (
+    <div class="next-release">
+      <p>Next passage releases on <strong>{formatDate(nextReleaseDate)}</strong></p>
+    </div>
+  )}
+
+</BaseLayout>
+
+<style>
+  .hero {
+    text-align: center;
+    margin: 3rem 0 4rem;
+  }
+  
+  .hero h1 {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    line-height: 1.2;
+  }
+  
+  .subtitle {
+    font-size: 1.25rem;
+    color: var(--text-muted);
+    line-height: 1.6;
+  }
+  
+  .progress-section {
+    background: white;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 2rem;
+    margin: 3rem 0;
+  }
+  
+  .progress-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+    margin-bottom: 2rem;
+    text-align: center;
+  }
+  
+  .stat-number {
+    display: block;
+    font-size: 2.5rem;
+    font-weight: 600;
+    color: var(--accent-blue);
+  }
+  
+  .stat-label {
+    display: block;
+    font-family: var(--font-sans);
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+  }
+  
+  .progress-bar {
+    height: 8px;
+    background: var(--border-color);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  
+  .progress-fill {
+    height: 100%;
+    background: var(--accent-blue);
+    transition: width 0.3s ease;
+  }
+  
+  .latest-passage {
+    margin: 4rem 0;
+  }
+  
+  .passage-card {
+    background: white;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 2rem;
+    transition: border-color 0.2s ease;
+  }
+  
+  .passage-card:hover {
+    border-color: var(--accent-blue);
+  }
+  
+  .passage-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    font-family: var(--font-sans);
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  
+  .day-number {
+    color: var(--accent-blue);
+    font-weight: 600;
+  }
+  
+  .book-chapter {
+    color: var(--text-muted);
+  }
+  
+  .passage-preview {
+    font-size: 1.1rem;
+    line-height: 1.7;
+    margin-bottom: 1rem;
+  }
+  
+  .read-more {
+    font-family: var(--font-sans);
+    font-size: 0.9rem;
+    color: var(--accent-blue);
+    font-weight: 500;
+  }
+  
+  .next-release {
+    text-align: center;
+    padding: 1.5rem;
+    background: #F5F5F5;
+    border-radius: 8px;
+    margin: 2rem 0;
+    font-family: var(--font-sans);
+  }
+  
+  .about-section {
+    margin: 4rem 0;
+    max-width: 800px;
+  }
+  
+  .about-section ul {
+    margin: 1.5rem 0;
+    padding-left: 2rem;
+  }
+  
+  .about-section li {
+    margin-bottom: 0.75rem;
+  }
+  
+  @media (max-width: 768px) {
+    .hero h1 {
+      font-size: 2rem;
+    }
+    
+    .subtitle {
+      font-size: 1.1rem;
+    }
+    
+    .progress-stats {
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+
+    .section-divider {
+      height: 1px;
+      background-color var(--border-color);
+      border: none;
+      margin: 3rem 0;
+    }
+  }
+</style>

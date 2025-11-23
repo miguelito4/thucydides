@@ -1,0 +1,273 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getAllThemes } from '../../utils/chunks.js';
+
+const themes = getAllThemes();
+
+// Organize themes by Waltz levels
+const waltzStructure = {
+  "Level I: The Individual (Physis)": {
+    description: "The unchangeable constants of human nature that drive all political behavior",
+    themes: [
+      "Fear, Honor, and Interest",
+      "Hope vs. Reality",
+      "The Corrosion of Morality"
+    ]
+  },
+  "Level II: The State (Polis)": {
+    description: "How domestic structure and material resources shape state behavior",
+    themes: [
+      "Democracy vs. Oligarchy",
+      "Sea Power vs. Land Power",
+      "Civil Strife (Stasis)"
+    ]
+  },
+  "Level III: The System (Kinesis)": {
+    description: "The dynamics of power and conflict in an anarchic international system",
+    themes: [
+      "The Thucydides Trap",
+      "Empire and Hegemony",
+      "Power vs. Justice (Melian Paradigm)",
+      "Alliance Politics",
+      "Escalation Dynamics"
+    ]
+  }
+};
+---
+
+<BaseLayout 
+  title="Themes" 
+  description="Explore Thucydides through Kenneth Waltz's three levels of analysis"
+>
+  <article class="themes-page">
+    <h1>The Levels of Analysis</h1>
+    <div class="intro">
+      
+      <p>
+        Thucydides' <em>History</em> is not just a chronicle of battles. It is a study of political behavior.
+      </p>
+
+      <p>
+        To help navigate his work, we can use the framework that Kenneth Waltz established in <a href="https://books.google.com/books?id=ThNaDwAAQBAJ&printsec=frontcover&source=gbs_ViewAPI&hl=en#v=onepage&q&f=false"><em>Man, The State, and War</a></em>, which divides conflict into three "images" or levels.
+      </p>
+
+      <p>
+        Thucydides refuses to simplify.
+      </p>
+      
+      <p>
+       He reveals a tragic, mutually reinforcing cycle: while human fear drives the state to war, the anarchy of the war recoils back—radicalizing the state's politics and dehumanizing the individual's nature.
+      </p>
+
+      <h2>Level I: The Individual (Physis)</h2>
+      <p>
+        <b>Fear, Honor, and Interest:</b> Thucydides argues that all human action—and by extension, state actions—stems from these primal drivers, often masking themselves as "justice."
+        <br><br>
+        <b>Hope vs. Reality:</b> The dangerous gap between <em>Logos</em> (words and plans) and <em>Ergon</em> (deeds and reality); how "hope" blinds leaders to the cold math of probability.
+        <br><br>
+        <b>The Corrosion of Morality:</b> How moral laws (justice) disintegrate under the pressures of <em>Ananke</em> (expedience or necessity); the struggle to maintain civilization when survival is at stake.
+      </p>
+
+      <h2>Level II: The State (Polis)</h2>
+        <b>Democracy vs. Oligarchy:</b> The contrast between the energetic, fickle nature of Athenian democracy and the slow, cautious stability of Spartan oligarchy.<br><br>
+        <b>Sea Power vs. Land Power:</b> How geography shapes ideology—the commercial, imperial logic of the navy (Athens) versus the agrarian, isolationist logic of the Army (Sparta).<br><br>
+        <b>Civil Strife (Stasis):</b> The internal collapse of the state; how polarization and faction destroy a city more effectively than an invading army.<br><br>    
+
+      <h2>Level III: The System (Kinesis)</h2>
+      <p>
+        <b>Escalation Dynamics:</b> The "truest cause" of the war—the inevitable conflict caused by the growth of Athenian power and the fear it inspired in Sparta.<br><br>
+        <b>Empire and Hegemony:</b> The paradox of hegemony; why empires constantly expand to appear strong, even when expansion leads to strategic overreach.<br><br>
+        <b>Alliance Politics:</b> How great powers lose control of their destiny by getting dragged into wars tied to the grievances of smaller allies.<br><br>
+
+    <hr class="section-divider" /><br>
+
+    <h1>Explore by Theme</h1>
+    
+    <div class="intro">
+      <p>
+        The cards below enable you to browse passages organized by these enduring themes.<br><br>
+        If a theme doesn't appear yet, be patient. It's likely because a passage concerning it hasn't been released.
+    </div>
+
+    {Object.entries(waltzStructure).map(([level, data]) => (
+      <section class="level-section">
+        <h2>{level}</h2>
+        <p class="level-description">{data.description}</p>
+        
+        <div class="theme-grid">
+          {data.themes.filter(theme => themes.includes(theme)).map(theme => (
+            <a href={`/themes/${encodeURIComponent(theme)}`} class="internal theme-card">
+              <h3>{theme === "Power vs. Justice (Melian Paradigm)" ? 
+                <>Power vs. Justice<br/><span class="subtitle">(Melian Paradigm)</span></> : 
+                theme}</h3>
+              <span class="arrow">→</span>
+            </a>
+          ))}
+        </div>
+      </section>
+    ))}
+
+    <section class="framework-explanation">
+      <h2>Systemic Dynamics: The Reinforcing Loop</h2>
+      <p>
+        It is not a linear path from Man to War, to use Waltz's parlance. The pressure moves both ways.<br><br>
+        As you work through the book, bear this dynamic in mind. You can explore how the levels interact in two critical events:<br>
+      </p>
+      <ul>
+        <li>
+          <strong>The Plague of Athens | Upward Pressure (Micro &rarr; Macro)</strong><br> 
+          How the psychological collapse of the <em>Individual</em> (fear of death) destroyed the political order of the <em>State</em>, causing the failure of the <em>Systemic</em> grand strategy.
+        </li>
+        <li>
+          <strong>The Corcyraean Civil War | Downward Pressure (Macro &rarr; Micro)</strong><br> "War is a violent teacher." 
+          How the pressure of the international <em>System</em> radicalized the domestic <em>State</em>, eventually mutating the <em>Individual</em> psyche until "words changed their meanings."
+        </li>
+      </ul>
+      <p>
+        Thucydides operates at all three levels simultaneously, making his work uniquely 
+        sophisticated as political theory and as a framework for thinking about world events.
+      </p>
+    </section>
+  </article>
+</BaseLayout>
+
+<style>
+  .themes-page {
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  
+  .themes-page h1 {
+    font-size: 3rem;
+    margin-bottom: 2rem;
+  }
+  
+  .intro {
+    font-size: 1.1rem;
+    line-height: 1.7;
+    margin-bottom: 4rem;
+  }
+  
+  .intro p {
+    margin-bottom: 1.25rem;
+  }
+  
+  .level-section {
+    margin: 4rem 0;
+    padding-bottom: 3rem;
+    border-bottom: 1px solid var(--border-color);
+  }
+  
+  .level-section:last-of-type {
+    border-bottom: none;
+  }
+  
+  .level-section h2 {
+    font-size: 1.75rem;
+    margin-bottom: 0.75rem;
+    color: var(--accent-blue);
+  }
+  
+  .level-description {
+    font-size: 1.1rem;
+    font-style: italic;
+    color: var(--text-muted);
+    margin-bottom: 2rem;
+    line-height: 1.6;
+  }
+  
+  .theme-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  
+  .theme-card {
+    background: white;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: all 0.2s ease;
+  }
+  
+  .theme-card:hover {
+    border-color: var(--accent-blue);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  }
+  
+  .theme-card h3 {
+    font-size: 1.5rem;
+    margin: 0;
+    font-weight: 700;
+    color: var(--text-primary);
+    line-height: 1.4;
+  }
+  
+  .theme-card h3 .subtitle {
+    font-size: 1.2rem;
+    font-weight: 400;
+    color: var(--text-muted);
+  }
+  
+  .theme-card .arrow {
+    font-size: 1.5rem;
+    color: var(--accent-blue);
+    transition: transform 0.2s ease;
+    flex-shrink: 0;
+    margin-left: 1rem;
+  }
+  
+  .theme-card:hover .arrow {
+    transform: translateX(4px);
+  }
+  
+  .framework-explanation {
+    margin: 4rem 0 2rem;
+    padding: 2rem;
+    background: #F8F8F6;
+    border-left: 3px solid var(--accent-blue);
+    border-radius: 4px;
+  }
+  
+  .framework-explanation h2 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+  }
+  
+  .framework-explanation p {
+    margin-bottom: 1rem;
+    line-height: 1.7;
+  }
+  
+  .framework-explanation ul {
+    margin: 1.5rem 0;
+    padding-left: 2rem;
+  }
+  
+  .framework-explanation li {
+    margin-bottom: 1rem;
+    line-height: 1.6;
+  }
+  
+  @media (max-width: 768px) {
+    .themes-page h1 {
+      font-size: 2rem;
+    }
+    
+    .intro {
+      font-size: 1.1rem;
+    }
+    
+    .theme-grid {
+      grid-template-columns: 1fr;
+    }
+    
+    .level-section h2 {
+      font-size: 1.5rem;
+    }
+  }
+</style>

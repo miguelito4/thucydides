@@ -1,0 +1,59 @@
+# Thucydides Daily Reader Configuration
+
+# Text Processing
+parsing:
+  target_chunk_size: 2500  # Target characters per chunk
+  min_chunk_size: 2000     # Minimum acceptable chunk size
+  max_chunk_size: 3000     # Maximum acceptable chunk size
+  respect_paragraphs: true  # Try to break at paragraph boundaries
+  respect_chapters: true    # Try to break at chapter boundaries
+
+# Gutenberg Source
+source:
+  url: "https://www.gutenberg.org/files/7142/7142-0.txt"
+  book_id: 7142
+  title: "The History of the Peloponnesian War"
+  author: "Thucydides"
+  translator: "Richard Crawley"
+  start_marker: "*** START OF THE PROJECT GUTENBERG EBOOK"
+  end_marker: "*** END OF THE PROJECT GUTENBERG EBOOK"
+
+# AI Enhancement
+anthropic:
+  model: "claude-opus-4-20250514"
+  max_tokens: 4000
+  temperature: 0.7
+  
+# WordPress Publishing
+wordpress:
+  blog_url: "https://caseyjr.org"
+  post_time: "06:00:00"  # UTC time for daily posts
+  tags:
+    - thucydides
+    - ancient-greece
+    - peloponnesian-war
+    - classical-history
+
+# Content Structure
+content:
+  sections:
+    - original_text
+    - modern_translation
+    - context
+    - annotations
+    - parallel_accounts
+    - related_passages
+    - discussion_prompts
+    - progress_tracker
+
+# Scheduling
+schedule:
+  start_date: "2025-01-01"  # First post date
+  days_per_week: 7           # Post every day
+  
+# File Paths
+paths:
+  raw_text: "data/raw/thucydides_crawley.txt"
+  processed_chunks: "data/processed/chunks.json"
+  publication_log: "data/published/log.json"
+  metadata: "data/processed/metadata.json"

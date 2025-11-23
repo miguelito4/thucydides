@@ -1,0 +1,439 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { loadChunks } from '../../utils/chunks.js';
+import { isReleased, getReleaseDate, formatDate, getProgressPercentage } from '../../utils/releaseDate.js';
+
+function renderParagraphs(text) {
+  if (!text) return '';
+  return text.split('\n\n')
+    .filter(para => para.trim())
+    .map(para => `<p>${para.trim()}</p>`)
+    .join('');
+}
+
+export async function getStaticPaths() {
+  const chunks = loadChunks();
+  
+  return chunks
+    .filter(chunk => chunk.enriched && Object.keys(chunk.enriched).length > 0)
+    .map((chunk) => {
+      const dayNumber = chunk.chunk_index + 1;
+      return {
+        params: { id: dayNumber.toString() },
+        props: { chunk, dayNumber }
+      };
+    });
+}
+
+const { chunk, dayNumber } = Astro.props;
+const released = isReleased(dayNumber);
+const releaseDate = getReleaseDate(dayNumber);
+
+// If not released yet, show coming soon message
+if (!released) {
+  return Astro.redirect('/');
+}
+
+const { enriched } = chunk;
+const hasPrevious = dayNumber > 1;
+const hasNext = dayNumber < 506 && isReleased(dayNumber + 1);
+---
+
+<BaseLayout 
+  title={`Day ${dayNumber}: Book ${chunk.book}, Chapter ${chunk.chapter}`}
+  description={enriched.context?.substring(0, 160)}
+>
+  <article class="daily-passage">
+    <!-- Header -->
+    <header class="passage-header">
+      <div class="meta">
+        <span class="day-number">Day {dayNumber} of 506</span>
+        <span class="book-chapter">Book {chunk.book}, Chapter {chunk.chapter}</span>
+        <span class="release-date">{formatDate(releaseDate)}</span>
+      </div>
+      
+      <div class="progress-indicator">
+        <div class="progress-bar">
+          <div class="progress-fill" style={`width: ${getProgressPercentage(dayNumber)}%`}></div>
+        </div>
+        <span class="progress-text">{getProgressPercentage(dayNumber)}% through the History</span>
+      </div>
+    </header>
+
+    <!-- Summary -->
+    {enriched.context && (
+      <section class="summary">
+        <h2>Today's Passage</h2>
+        <p>{enriched.context.split('.')[0]}.</p>
+      </section>
+    )}
+
+    <!-- Side-by-side translations -->
+    <section class="translations">
+      <div class="translation-container">
+        <div class="translation crawley">
+          <h3>Crawley Translation (1910)</h3>
+          <div class="text" set:html={renderParagraphs(chunk.original_text)}></div>
+        </div>
+        
+        <div class="translation modern">
+          <h3>Modern Translation</h3>
+          <div class="text" set:html={renderParagraphs(enriched.modern_translation)}></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Historical Context -->
+    {enriched.context && (
+      <section class="context">
+        <h2>Historical Context</h2>
+        <div set:html={renderParagraphs(enriched.context)}></div>
+      </section>
+    )}
+
+    <!-- Key Themes -->
+    {enriched.key_themes && enriched.key_themes.length > 0 && (
+      <section class="themes">
+        <h3>Key Themes</h3>
+        <div class="theme-tags">
+          {enriched.key_themes.map(theme => (
+            <a href={`/themes/${encodeURIComponent(theme)}`} class="internal theme-tag">
+              {theme}
+            </a>
+          ))}
+        </div>
+      </section>
+    )}
+
+    <!-- Annotations -->
+    {enriched.annotations && enriched.annotations.length > 0 && (
+      <section class="annotations">
+        <h2>Annotations & References</h2>
+        <div class="annotation-list">
+          {enriched.annotations.map(annotation => (
+            <div class="annotation">
+              <h4>{annotation.topic}</h4>
+              <p>{annotation.explanation}</p>
+              {annotation.link && (
+                <a href={annotation.link} class="external" target="_blank" rel="noopener">
+                  Learn more →
+                </a>
+              )}
+            </div>
+          ))}
+        </div>
+      </section>
+    )}
+
+    <!-- Parallel Accounts -->
+    {enriched.parallel_accounts && enriched.parallel_accounts.length > 0 && (
+      <section class="parallels">
+        <h2>Parallel Ancient Sources</h2>
+        <div class="parallel-list">
+          {enriched.parallel_accounts.map(account => (
+            <div class="parallel">
+              <h4>{account.author}: <em>{account.work}</em> ({account.reference})</h4>
+              <p>{account.relevance}</p>
+              {account.link && (
+                <a href={account.link} class="external" target="_blank" rel="noopener">
+                  Read passage →
+                </a>
+              )}
+            </div>
+          ))}
+        </div>
+      </section>
+    )}
+
+    <!-- Discussion Prompts -->
+    {enriched.discussion_prompts && enriched.discussion_prompts.length > 0 && (
+      <section class="discussion">
+        <h2>Discussion Questions</h2>
+        <ol class="discussion-list">
+          {enriched.discussion_prompts.map(prompt => (
+            <li>{prompt}</li>
+          ))}
+        </ol>
+      </section>
+    )}
+
+    <!-- Navigation -->
+    <nav class="passage-nav">
+      {hasPrevious ? (
+        <a href={`/day/${dayNumber - 1}`} class="internal nav-button prev">
+          ← Day {dayNumber - 1}
+        </a>
+      ) : (
+        <span class="nav-button disabled">← Previous</span>
+      )}
+      
+      <a href="/passages" class="internal nav-button home">All Passages</a>
+      
+      {hasNext ? (
+        <a href={`/day/${dayNumber + 1}`} class="internal nav-button next">
+          Day {dayNumber + 1} →
+        </a>
+      ) : (
+        <span class="nav-button disabled">Next →</span>
+      )}
+    </nav>
+  </article>
+</BaseLayout>
+
+<style>
+  .daily-passage {
+    max-width: 900px;
+    margin: 0 auto;
+  }
+  
+  .passage-header {
+    margin-bottom: 3rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid var(--border-color);
+  }
+  
+  .meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: var(--font-sans);
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 1rem;
+  }
+  
+  .day-number {
+    color: var(--accent-blue);
+    font-weight: 600;
+  }
+  
+  .book-chapter {
+    color: var(--text-muted);
+  }
+  
+  .release-date {
+    color: var(--text-muted);
+  }
+  
+  .progress-indicator {
+    margin-top: 1rem;
+  }
+  
+  .progress-bar {
+    height: 4px;
+    background: var(--border-color);
+    border-radius: 2px;
+    overflow: hidden;
+    margin-bottom: 0.5rem;
+  }
+  
+  .progress-fill {
+    height: 100%;
+    background: var(--accent-blue);
+  }
+  
+  .progress-text {
+    font-family: var(--font-sans);
+    font-size: 0.85rem;
+    color: var(--text-muted);
+  }
+  
+  .summary {
+    background: #F8F8F6;
+    border-left: 3px solid var(--accent-blue);
+    padding: 1.5rem;
+    margin-bottom: 3rem;
+    border-radius: 4px;
+  }
+  
+  .summary h2 {
+    font-size: 1.25rem;
+    margin-bottom: 0.75rem;
+  }
+  
+  .summary p {
+    font-size: 1.15rem;
+    line-height: 1.6;
+    margin: 0;
+  }
+  
+  .translations {
+    margin: 3rem 0;
+  }
+  
+  .translation-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+  }
+  
+  .translation h3 {
+    font-size: 1rem;
+    font-family: var(--font-sans);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--border-color);
+  }
+  
+  .translation .text {
+    font-size: 1rem;
+    line-height: 1.8;
+  }
+  
+  .crawley .text {
+    color: var(--text-muted);
+    font-size: 0.95rem;
+  }
+  
+  .modern .text {
+    color: var(--text-primary);
+  }
+  
+  section {
+    margin: 3rem 0;
+  }
+  
+  section h2 {
+    font-size: 1.75rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  section h3 {
+    font-size: 1.25rem;
+    margin-bottom: 1rem;
+  }
+  
+  .context {
+    max-width: 800px;
+  }
+  
+  .themes {
+    margin: 2rem 0;
+  }
+  
+  .theme-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+  
+  .theme-tag {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    background: white;
+    border: 1px solid var(--accent-blue);
+    border-radius: 20px;
+    font-family: var(--font-sans);
+    font-size: 0.9rem;
+    color: var(--accent-blue);
+    transition: all 0.2s ease;
+  }
+  
+  .theme-tag:hover {
+    background: var(--accent-blue);
+    color: white;
+  }
+  
+  .annotation-list,
+  .parallel-list {
+    display: grid;
+    gap: 1.5rem;
+  }
+  
+  .annotation,
+  .parallel {
+    background: white;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 1.5rem;
+  }
+  
+  .annotation h4,
+  .parallel h4 {
+    font-size: 1.1rem;
+    margin-bottom: 0.75rem;
+  }
+  
+  .annotation p,
+  .parallel p {
+    margin-bottom: 0.75rem;
+  }
+  
+  .discussion-list {
+    padding-left: 2rem;
+  }
+  
+  .discussion-list li {
+    margin-bottom: 1.25rem;
+    font-size: 1.05rem;
+    line-height: 1.6;
+  }
+  
+  .passage-nav {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 1rem;
+    align-items: center;
+    margin: 4rem 0 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--border-color);
+  }
+  
+  .nav-button {
+    font-family: var(--font-sans);
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 0.75rem 1.5rem;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    text-align: center;
+    transition: all 0.2s ease;
+  }
+  
+  .nav-button:not(.disabled):hover {
+    border-color: var(--accent-blue);
+    background: white;
+  }
+  
+  .nav-button.disabled {
+    color: var(--text-muted);
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  
+  .nav-button.home {
+    justify-self: center;
+  }
+  
+  .nav-button.next {
+    justify-self: end;
+  }
+  
+  @media (max-width: 768px) {
+    .translation-container {
+      grid-template-columns: 1fr;
+    }
+    
+    .meta {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.5rem;
+    }
+    
+    .passage-nav {
+      grid-template-columns: 1fr;
+      gap: 0.75rem;
+    }
+    
+    .nav-button.prev,
+    .nav-button.next,
+    .nav-button.home {
+      justify-self: stretch;
+    }
+  }
+</style>

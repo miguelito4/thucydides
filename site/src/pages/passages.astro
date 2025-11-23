@@ -1,0 +1,157 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getReleasedChunks } from '../utils/chunks.js';
+
+const releasedChunks = getReleasedChunks();
+---
+
+<BaseLayout 
+  title="All Passages" 
+  description="Complete archive of released passages from Thucydides' History"
+>
+  <article class="passages-archive">
+    <h1>All Passages</h1>
+    
+    <p class="intro">
+      {releasedChunks.length} passage{releasedChunks.length !== 1 ? 's' : ''} released so far. 
+      New passages appear daily at midnight UTC.
+    </p>
+
+    <div class="passage-list">
+      {releasedChunks.map(chunk => {
+        const dayNumber = chunk.chunk_index + 1;
+        return (
+          <a href={`/day/${dayNumber}`} class="internal passage-card">
+            <div class="passage-header">
+              <span class="day-number">Day {dayNumber}</span>
+              <span class="book-chapter">Book {chunk.book}, Chapter {chunk.chapter}</span>
+            </div>
+            <p class="passage-preview">
+              {chunk.enriched.modern_translation?.substring(0, 200)}...
+            </p>
+            {chunk.enriched.key_themes && chunk.enriched.key_themes.length > 0 && (
+              <div class="theme-tags">
+                {chunk.enriched.key_themes.slice(0, 3).map(theme => (
+                  <span class="theme-tag">{theme}</span>
+                ))}
+              </div>
+            )}
+          </a>
+        );
+      })}
+    </div>
+
+    {releasedChunks.length === 0 && (
+      <div class="empty-state">
+        <p>No passages have been released yet. The first passage will appear on January 1, 2026.</p>
+      </div>
+    )}
+  </article>
+</BaseLayout>
+
+<style>
+  .passages-archive {
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+  
+  .passages-archive h1 {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+  }
+  
+  .intro {
+    font-size: 1.25rem;
+    line-height: 1.6;
+    color: var(--text-muted);
+    margin-bottom: 3rem;
+  }
+  
+  .passage-list {
+    display: grid;
+    gap: 1.5rem;
+  }
+  
+  .passage-card {
+    background: white;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 1.5rem;
+    display: block;
+    transition: all 0.2s ease;
+  }
+  
+  .passage-card:hover {
+    border-color: var(--accent-blue);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  }
+  
+  .passage-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    font-family: var(--font-sans);
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  
+  .day-number {
+    color: var(--accent-blue);
+    font-weight: 600;
+  }
+  
+  .book-chapter {
+    color: var(--text-muted);
+  }
+  
+  .passage-preview {
+    font-size: 1rem;
+    line-height: 1.7;
+    margin-bottom: 1rem;
+    color: var(--text-primary);
+  }
+  
+  .theme-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  
+  .theme-tag {
+    font-family: var(--font-sans);
+    font-size: 0.8rem;
+    padding: 0.25rem 0.75rem;
+    background: #F5F5F5;
+    border-radius: 12px;
+    color: var(--text-muted);
+  }
+  
+  .empty-state {
+    text-align: center;
+    padding: 4rem 2rem;
+    color: var(--text-muted);
+  }
+  
+  .empty-state p {
+    font-size: 1.1rem;
+  }
+  
+  @media (max-width: 768px) {
+    .passages-archive h1 {
+      font-size: 2rem;
+    }
+    
+    .intro {
+      font-size: 1.1rem;
+    }
+    
+    .passage-header {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.25rem;
+    }
+  }
+</style>
