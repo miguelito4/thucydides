@@ -4,7 +4,7 @@
  * Each subsequent day releases at midnight UTC
  */
 
-const START_DATE = new Date('2025-11-26T00:00:00Z'); // Tuesday, November 26, 2025
+const START_DATE = new Date('2025-11-25T00:00:00Z'); // Tuesday, November 26, 2025
 
 export function isReleased(dayNumber) {
   const releaseDate = getReleaseDate(dayNumber);
