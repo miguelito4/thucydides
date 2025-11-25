@@ -1,6 +1,6 @@
 /**
  * Calculate if a given day number has been released yet
- * Day 1 releases on January 1, 2026
+ * Day 1 releases on November 25, 2025
  * Each subsequent day releases at midnight UTC
  */
 
