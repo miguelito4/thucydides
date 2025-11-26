@@ -1,0 +1,14 @@
+name: Daily Rebuild
+
+on:
+  schedule:
+    # Runs at 00:05 UTC every day
+    - cron: '5 0 * * *'
+  workflow_dispatch:
+
+jobs:
+  rebuild:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Vercel Rebuild
+        run: curl -X POST "${{ secrets.VERCEL_DEPLOY_HOOK }}"
